@@ -1,0 +1,14 @@
+.vs
+.vs/*
+
+.idea
+.idea/*
+
+packages
+packages/*
+
+AuraController/bin
+AuraController/bin/*
+
+AuraController/obj
+AuraController/obj/*
