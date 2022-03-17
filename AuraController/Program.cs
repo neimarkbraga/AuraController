@@ -115,7 +115,7 @@ namespace AuraController
                         if (config.Lights == null || config.Lights.Contains(i))
                             device.Lights[(int)i].Color = config.Color;
                     device.Apply();
-                    break;
+                    if (deviceName != null) break;
                 }
             }
         }
@@ -124,6 +124,7 @@ namespace AuraController
         {
            try
             {
+                Console.WriteLine("Starting");
                 // initialize - acquire control by default
                 Activate();
                 SetDeviceColor(null, new RequestData()
@@ -156,6 +157,18 @@ namespace AuraController
                 server.Get("/devices", (req, res, next) =>
                 {
                     RequireActiveControl();
+                    HttpServer.SendJson(GetDevices(), res);
+                });
+
+                // set devices lights color
+                server.Put("/devices", (req, res, next) =>
+                {
+                    RequireActiveControl();
+
+                    Dictionary<string, string> param = HttpServer.GetParams(req);
+                    string body = HttpServer.GetBodyContent(req);
+                    RequestData config = JsonSerializer.Deserialize<RequestData>(body);
+                    SetDeviceColor(null, config);
                     HttpServer.SendJson(GetDevices(), res);
                 });
 
